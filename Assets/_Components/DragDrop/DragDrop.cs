@@ -18,15 +18,11 @@ public class DragDrop : MonoBehaviour
 	private RectTransform _dragDropRectTransform;
 	private Vector2 _dragDropRectSize;
 
-	// LongPress Event Variables
-	private bool _longPress = false;
-	private float _pressedTime = 0;
-
 	// Drag Event Variables
 	private int _originalOrder;
 	private int _dragEndOrder;
 	private GameObject _replacedObject;
-	private Vector3 _realDragPosition;
+	private Vector3 _realtimeDragPosition;
 	private Vector3 _dragBeginPosition;
 	private Vector3 _dragDeltaBeginPosition;
 	private Vector3 _dragDeltaPosition;
@@ -61,16 +57,16 @@ public class DragDrop : MonoBehaviour
 		dragDropObject.transform.SetAsLastSibling ();
 
 		_dragBeginPosition = _dragDropRectTransform.localPosition;
-		_dragDeltaBeginPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition) * 100;
+		_dragDeltaBeginPosition = Input.mousePosition;
 	}
 
 	public void OnDrag ()
 	{
-		_realDragPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition) * 100;
+		_realtimeDragPosition = Input.mousePosition;
 
-		_dragDeltaPosition = _realDragPosition - _dragDeltaBeginPosition;
+		_dragDeltaPosition = _realtimeDragPosition - _dragDeltaBeginPosition;
 
-		_dragDropRectTransform.localPosition = _dragBeginPosition + new Vector3 (_dragDeltaPosition.x, _dragDeltaPosition.y, 0);
+		_dragDropRectTransform.localPosition = new Vector3 (_dragDeltaPosition.x, _dragDeltaPosition.y, 0);
 
 	}
 
