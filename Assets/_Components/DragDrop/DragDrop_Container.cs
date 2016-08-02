@@ -11,6 +11,8 @@ public class DragDrop_Container : MonoBehaviour
 	public float autoMoveSpeed;
 
 	// Fixed Position of Object
+	public float row;
+	public float column;
 	public Vector3[] dragDropObjectPosition;
 
 	void Awake ()
@@ -104,14 +106,16 @@ public class DragDrop_Container : MonoBehaviour
 		int dragObjectOrder = GetObjectOrder (dragObject);
 		int replacedObjectOrder = GetObjectOrder (replacedObject);
 
+		dragObject.transform.DOLocalMove (dragDropObjectPosition [dragObjectOrder], autoMoveSpeed);
 		for (int i = 0; i < dragObject.transform.childCount; i += 1)
 		{
-			dragObject.transform.GetChild (i).DOLocalMove (dragDropObjectPosition [dragObjectOrder], autoMoveSpeed);
+			dragObject.transform.GetChild (i).DOLocalMove (Vector3.zero, autoMoveSpeed);
 		}
 
+		replacedObject.transform.DOLocalMove (dragDropObjectPosition [replacedObjectOrder], autoMoveSpeed);
 		for (int i = 0; i < replacedObject.transform.childCount; i += 1)
 		{
-			replacedObject.transform.GetChild (i).DOLocalMove (dragDropObjectPosition [replacedObjectOrder], autoMoveSpeed);
+			replacedObject.transform.GetChild (i).DOLocalMove (Vector3.zero, autoMoveSpeed);
 		}
 
 		SetObjectHierarchy (dragObject, dragObjectOrder);
