@@ -13,7 +13,7 @@ public class DragDrop : MonoBehaviour
 	public GameObject dragDropObject;
 
 	// A certain distance to decide whether it is in the place or not  
-	public Vector2 detectMargin;
+//	public Vector2 detectMargin;
 
 	// Structure
 	private RectTransform _dragDropRectTransform;
@@ -30,8 +30,8 @@ public class DragDrop : MonoBehaviour
 	private Vector3 _dragEndPosition;
 	private float _spacingX;
 	private float _spacingY;
-	private float _row;
-	private float _column;
+	private int _row;
+	private int _column;
 	private Vector3 _dragDeltaBeginPosition;
 	private Vector3 _dragDeltaPosition;
 
@@ -49,17 +49,12 @@ public class DragDrop : MonoBehaviour
 		_column = dragDropContainer.GetComponent<DragDrop_Container> ().column;
 	}
 
-	void Start ()
-	{
-		
-	}
-
 	Vector3 GetDragEndPosition ()
 	{
 		return transform.localPosition;
 	}
 
-	int GetClosetInteger (float f, float limit)
+	int GetClosetInteger (float f, int limit)
 	{
 		if (f < 0)
 		{
@@ -67,7 +62,7 @@ public class DragDrop : MonoBehaviour
 		}
 		else if (f > (limit - 1))
 		{
-			return (int)limit - 1;
+			return limit - 1;
 		}
 		else if (f >= 0 && f - (int)f > 0.5f)
 		{
@@ -96,9 +91,9 @@ public class DragDrop : MonoBehaviour
 		// Get Drag Object's DragEnd Position
 		_dragEndPosition = GetDragEndPosition ();
 
-		// Get arrange order (x, y)
-		x = (_objectRectTransform.localPosition.x + _dragEndPosition.x - _objectRectSize.x / 2) / (_objectRectSize.x + _spacingX);
-		y = 0 - (_objectRectTransform.localPosition.y + _dragEndPosition.y + _objectRectSize.y / 2) / (_objectRectSize.y + _spacingY);
+		// Get arrange order (row, column)
+		x = 0 - (_objectRectTransform.localPosition.y + _dragEndPosition.y + _objectRectSize.y / 2) / (_objectRectSize.y + _spacingY);
+		y = (_objectRectTransform.localPosition.x + _dragEndPosition.x - _objectRectSize.x / 2) / (_objectRectSize.x + _spacingX);
 
 		Debug.Log (_dragEndPosition.x.ToString () + ", " + _dragEndPosition.y.ToString ());
 		Debug.Log (x.ToString () + ", " + y.ToString ());
@@ -109,7 +104,7 @@ public class DragDrop : MonoBehaviour
 		Debug.Log (x.ToString () + ", " + y.ToString ());
 
 		// order = column * x + y
-		order = (int)x + (int)_column * (int)y;
+		order = _column * (int)x + (int)y;
 
 		Debug.Log (order);
 

@@ -11,19 +11,40 @@ public class DragDrop_Container : MonoBehaviour
 	public float autoMoveSpeed;
 
 	// Fixed Position of Object
-	public float row;
-	public float column;
+	public int row;
+	public int column;
 	public Vector3[] dragDropObjectPosition;
+
+	private RectTransform _dragDropContainerRectTransform;
+	private GridLayoutGroup _dragDropContainerGridLayoutGroup;
 
 	void Awake ()
 	{
 		GetAllObjects ();
 		GetObjectPosition ();
+		_dragDropContainerRectTransform = GetComponent<RectTransform> ();
+		_dragDropContainerGridLayoutGroup = GetComponent<GridLayoutGroup> ();
 	}
 
 	void Start ()
 	{
+		InitializeContainer ();
 		SetAllObjectsOrder ();
+	}
+
+	void InitializeContainer ()
+	{
+		float containerX = - _dragDropContainerRectTransform.sizeDelta.x / 2;
+		float containerY = _dragDropContainerRectTransform.sizeDelta.y / 2;
+
+
+
+		_dragDropContainerRectTransform.anchorMin = new Vector2 (0.5f, 0.5f);
+		_dragDropContainerRectTransform.anchorMax = new Vector2 (0.5f, 0.5f);
+		_dragDropContainerRectTransform.pivot = new Vector2 (0, 1);
+		_dragDropContainerRectTransform.localPosition = new Vector3 (containerX, containerY, 0);
+
+		_dragDropContainerGridLayoutGroup.enabled = false;
 	}
 
 	void GetAllObjects ()
