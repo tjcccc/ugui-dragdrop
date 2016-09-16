@@ -38,16 +38,22 @@ public class DragDrop : MonoBehaviour
 	void Awake ()
 	{
 		_dragDropRectTransform = GetComponent<RectTransform> ();
-//		_dragDropRectSize = _dragDropRectTransform.sizeDelta;
 		_objectRectTransform = transform.parent.gameObject.GetComponent<RectTransform> ();
 		_objectRectSize = _objectRectTransform.sizeDelta;
-
-		_spacingX = dragDropContainer.GetComponent<GridLayoutGroup> ().spacing.x;
-		_spacingY = dragDropContainer.GetComponent<GridLayoutGroup> ().spacing.y;
-
-		_row = dragDropContainer.GetComponent<DragDrop_Container> ().row;
-		_column = dragDropContainer.GetComponent<DragDrop_Container> ().column;
 	}
+
+    void Start ()
+    {
+        GetContainerStructure();
+    }
+
+    void GetContainerStructure()
+    {
+        _spacingX = dragDropContainer.GetComponent<GridLayoutGroup>().spacing.x;
+        _spacingY = dragDropContainer.GetComponent<GridLayoutGroup>().spacing.y;
+        _row = dragDropContainer.GetComponent<DragDrop_Container>().row;
+        _column = dragDropContainer.GetComponent<DragDrop_Container>().column;
+    }
 
 	Vector3 GetDragEndPosition ()
 	{
@@ -95,13 +101,13 @@ public class DragDrop : MonoBehaviour
 		x = 0 - (_objectRectTransform.localPosition.y + _dragEndPosition.y + _objectRectSize.y / 2) / (_objectRectSize.y + _spacingY);
 		y = (_objectRectTransform.localPosition.x + _dragEndPosition.x - _objectRectSize.x / 2) / (_objectRectSize.x + _spacingX);
 
-		Debug.Log (_dragEndPosition.x.ToString () + ", " + _dragEndPosition.y.ToString ());
-		Debug.Log (x.ToString () + ", " + y.ToString ());
+		// Debug.Log (_dragEndPosition.x.ToString () + ", " + _dragEndPosition.y.ToString ());
+		// Debug.Log (x.ToString () + ", " + y.ToString ());
 
 		x = GetClosetInteger (x, _row);
 		y = GetClosetInteger (y, _column);
 
-		Debug.Log (x.ToString () + ", " + y.ToString ());
+		// Debug.Log (x.ToString () + ", " + y.ToString ());
 
 		// order = column * x + y
 		order = _column * (int)x + (int)y;

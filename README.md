@@ -2,19 +2,22 @@
 
 uGUI 通用交互实践：矩阵列表对象元素的拖动、放下与交换。
 
-**Unity** 5.3.5f1, **DOTween** 1.1.135
-
 ## 主要功能
 
-在Grid布局区域内，拖动其中任一 Object ，将其拖到任一位置，放开后，自动使其与附近 Object 进行位置交换。
+在Grid布局区域内，拖动其中任一对象 ，将其拖到任一位置，放开后，自动使其与附近对象进行位置交换。
+
+## 版本与依赖
+
+- **Unity** 5.3.5f1
+- **DOTween** 1.1.135
 
 ## 实现原理
 
-1. 记录每个 Object 的 Order 和 Local Position。
+1. 记录每个对象（Object）的 Order 和 Local Position。
 2. 拖动时，记录被拖动对象（Drag Object）的 Order 与实时位置。
 3. 放开 Drag Object ，根据其所在位置，计算其最近目标 Order ——该编号对应的对象即需要被交换的 Replaced Object 。
-4. 交换 Drag Object 和 Replaced Object 的编号。用动画方式交换 Drag Object 与 Replace Object 的 Local Position。
-5. 完成。
+4. 交换 Drag Object 和 Replaced Object 的编号。
+5. 用动画方式交换 Drag Object 与 Replace Object 的 Local Position。
 
 ## 脚本用法
 
@@ -41,11 +44,7 @@ DragDrop_Object 与 DragDrop 分开的目的：
 
 ![](Assets/_Components/DragDrop/pic0.png)
 
-- Drag Drop Object: 填写列表中对象元素的个数（Size）。Element 不必填写，脚本会自动计算。
 - Auto Move Speed: 填写交换位置所需要的时间（秒）。默认为0.2秒。
-- Row: 矩阵列表的行数。
-- Column: 矩阵列表的列数。
-- Drag Drop Object Position: 填写列表中对象元素位置的个数（Size）——和 Drag Drop Object 相同。Element 不必填写，脚本会自动计算。
 
 ### DragDrop_Object.cs 配置
 

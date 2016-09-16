@@ -6,29 +6,42 @@ using DG.Tweening;
 
 public class DragDrop_Container : MonoBehaviour
 {
-	// Drag and Drop Objects
-	public GameObject[] dragDropObject;
-	public float autoMoveSpeed;
+    // Drag and Drop Objects
 
-	// Fixed Position of Object
-	public int row;
-	public int column;
-	public Vector3[] dragDropObjectPosition;
+    [HideInInspector]
+    public GameObject[] dragDropObject;
+    [HideInInspector]
+    public Vector3[] dragDropObjectPosition;
+    [HideInInspector]
+    public int row;
+    [HideInInspector]
+    public int column;
+
+    public float autoMoveSpeed = 0.2f;
 
 	private RectTransform _dragDropContainerRectTransform;
 	private GridLayoutGroup _dragDropContainerGridLayoutGroup;
+    private int _objectAmount;
 
-	void Awake ()
+
+    void Awake ()
 	{
-		GetAllObjects ();
-		GetObjectPosition ();
-		_dragDropContainerRectTransform = GetComponent<RectTransform> ();
-		_dragDropContainerGridLayoutGroup = GetComponent<GridLayoutGroup> ();
-	}
+        _objectAmount = transform.childCount;
+        dragDropObject = new GameObject[_objectAmount];
+        dragDropObjectPosition = new Vector3[_objectAmount];
+
+        _dragDropContainerRectTransform = GetComponent<RectTransform>();
+        _dragDropContainerGridLayoutGroup = GetComponent<GridLayoutGroup>();
+
+        row = (int)(_dragDropContainerRectTransform.sizeDelta.x + _dragDropContainerGridLayoutGroup.spacing.x) / (int)(_dragDropContainerGridLayoutGroup.cellSize.x + _dragDropContainerGridLayoutGroup.spacing.x);
+        column = (int)(transform.childCount / row);
+    }
 
 	void Start ()
 	{
-		InitializeContainer ();
+        GetAllObjects();
+        GetObjectPosition();
+        InitializeContainer ();
 		SetAllObjectsOrder ();
 	}
 
@@ -36,8 +49,6 @@ public class DragDrop_Container : MonoBehaviour
 	{
 		float containerX = - _dragDropContainerRectTransform.sizeDelta.x / 2;
 		float containerY = _dragDropContainerRectTransform.sizeDelta.y / 2;
-
-
 
 		_dragDropContainerRectTransform.anchorMin = new Vector2 (0.5f, 0.5f);
 		_dragDropContainerRectTransform.anchorMax = new Vector2 (0.5f, 0.5f);
