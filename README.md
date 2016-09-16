@@ -33,7 +33,7 @@ DragDrop_Object 与 DragDrop 分开的目的：
 - 方便计算位置。
 - 可以分离被拖动状态对象与被拖动本体对象。比如拖动图标时，可以设定只有图标残影随鼠标或手指移动，图标本体在原地不动，直到放开拖动时，图标才进行移动。
 
-如果需要实时拖动交换，可以将 DragDrop_Object 设置为不可见。但一定要有，DragDrop_Object 记录着对象的编号（Order）。
+如果需要实时拖动交换，可以将 DragDrop_Object 对象设置为不可见（比如 alpha = 0）。DragDrop_Object 对象必须存在，它记录着对象的编号（Order）。
 
 ### DragDrop_Container.cs 配置
 
@@ -44,7 +44,7 @@ DragDrop_Object 与 DragDrop 分开的目的：
 - Drag Drop Object: 填写列表中对象元素的个数（Size）。Element 不必填写，脚本会自动计算。
 - Auto Move Speed: 填写交换位置所需要的时间（秒）。默认为0.2秒。
 - Row: 矩阵列表的行数。
-- Column: 矩阵列表的行数。
+- Column: 矩阵列表的列数。
 - Drag Drop Object Position: 填写列表中对象元素位置的个数（Size）——和 Drag Drop Object 相同。Element 不必填写，脚本会自动计算。
 
 ### DragDrop_Object.cs 配置
