@@ -6,10 +6,10 @@ uGUI 通用交互实践：矩阵列表对象元素的拖动、放下与交换。
 
 在Grid布局区域内，拖动其中任一对象 ，将其拖到任一位置，放开后，自动使其与附近对象进行位置交换。
 
-## 版本与依赖
+## 开发版本与依赖
 
-- **Unity** 5.3.5f1
-- **DOTween** 1.1.135
+- **Unity** ver. 5.4.1p4
+- **DOTween** ver. 1.1.310
 
 ## 实现原理
 
@@ -24,10 +24,10 @@ uGUI 通用交互实践：矩阵列表对象元素的拖动、放下与交换。
 ### 文件结构
 
 ```
-_component/dragdrop/
+_Components/DragDrop/
 ├── DragDrop_Container.cs  // 拖动元素容器
 ├── DragDrop_Object.cs  // 被拖动对象所在实体
-├── DragDrop.cs  // 被拖动对象实际操作点
+└── DragDrop.cs  // 被拖动对象实际操作点
 ```
 
 DragDrop_Object 与 DragDrop 分开的目的：
@@ -42,7 +42,17 @@ DragDrop_Object 与 DragDrop 分开的目的：
 
 此脚本需要挂在 Grid Layout Group 所在对象上。
 
-![](Assets/_Components/DragDrop/pic0.png)
+![](doc_attachments/pic0.png)
+
+Grid Layout Group 所在对象的 Rect Transform 的 Anchors 不可用 Stretch 方式，会使其元素位置错乱。
+
+为避免布局错乱，脚本会自动设置为：
+
+```
+.anchorMin = new Vector2 (0, 1);
+.anchorMax = new Vector2 (0, 1);
+.pivot = new Vector2 (0, 1);
+```
 
 - Auto Move Speed: 填写交换位置所需要的时间（秒）。默认为0.2秒。
 
@@ -50,7 +60,9 @@ DragDrop_Object 与 DragDrop 分开的目的：
 
 此脚本需要挂在 DragDrop_Container 下每一个被拖动的对象上。
 
-![](Assets/_Components/DragDrop/pic1.png)
+**注意**：对象不能与不存在的对象进行位置交换，如果想让对象移动到一个空的位置（与「空」交换），请在该位置添加一个不可见（Inactive or alpha = 0）的对象。
+
+![](doc_attachments/pic1.png)
 
 - Object Order: 以此填写对象编号。
 
@@ -58,10 +70,10 @@ DragDrop_Object 与 DragDrop 分开的目的：
 
 此脚本需要挂在 DragDrop_Object 对象的子对象上。这个子对象是用户直接操作拖动的对象，请给它必要的尺寸大小。
 
-![](Assets/_Components/DragDrop/pic2.png)
+![](doc_attachments/pic2.png)
 
 - Drag Drop Container: 放置 Drag Drop Container 所在对象。
-- Drag Drop Object: 放置其父对象。 
+- Drag Drop Object: 放置其父对象。
 
 本脚本使用 uGUI 内置的 Event Trigger 控制。请添加此组件，并加入三种委托：
 
@@ -71,4 +83,20 @@ DragDrop_Object 与 DragDrop 分开的目的：
 
 用户自己的方法也可以插入其中。
 
+## 工程内示例
 
+### Example 1
+
+DragDrop_Object 与 DragDrop 对象都可见。拖动放开后，DragDrop_Object 对象才进行交换。
+
+### Example 2
+
+DragDrop_Object 不可见。拖动放开后，直接交互拖动元素（DragDrop 对象）。
+
+### Example 3
+
+只有一行情况下的拖动与交换示例。
+
+### Example 4
+
+行数与列数不同情况下的拖动与交换示例。

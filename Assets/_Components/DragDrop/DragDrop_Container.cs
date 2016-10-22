@@ -7,22 +7,20 @@ using DG.Tweening;
 public class DragDrop_Container : MonoBehaviour
 {
     // Drag and Drop Objects
-
     [HideInInspector]
     public GameObject[] dragDropObject;
-    [HideInInspector]
+//    [HideInInspector]
     public Vector3[] dragDropObjectPosition;
     [HideInInspector]
-    public int row;
+	public int column;
     [HideInInspector]
-    public int column;
+	public int row;
 
     public float autoMoveSpeed = 0.2f;
 
 	private RectTransform _dragDropContainerRectTransform;
 	private GridLayoutGroup _dragDropContainerGridLayoutGroup;
     private int _objectAmount;
-
 
     void Awake ()
 	{
@@ -33,31 +31,38 @@ public class DragDrop_Container : MonoBehaviour
         _dragDropContainerRectTransform = GetComponent<RectTransform>();
         _dragDropContainerGridLayoutGroup = GetComponent<GridLayoutGroup>();
 
-        row = (int)(_dragDropContainerRectTransform.sizeDelta.x + _dragDropContainerGridLayoutGroup.spacing.x) / (int)(_dragDropContainerGridLayoutGroup.cellSize.x + _dragDropContainerGridLayoutGroup.spacing.x);
-        column = (int)(transform.childCount / row);
+		column = (int)(_dragDropContainerRectTransform.sizeDelta.x + _dragDropContainerGridLayoutGroup.spacing.x) / (int)(_dragDropContainerGridLayoutGroup.cellSize.x + _dragDropContainerGridLayoutGroup.spacing.x);
+		row = ((float)_objectAmount / column) > (_objectAmount / column) ? (_objectAmount / column) + 1 : (_objectAmount / column);
     }
 
-	void Start ()
+	IEnumerator Start ()
 	{
-        GetAllObjects();
-        GetObjectPosition();
-        InitializeContainer ();
+		yield return new WaitForFixedUpdate ();
+		GetAllObjects ();
+        GetObjectPosition ();
 		SetAllObjectsOrder ();
+		InitializeContainer ();
 	}
 
+	/// <summary>
+	/// Initializes the container.
+	/// </summary>
 	void InitializeContainer ()
 	{
-		float containerX = - _dragDropContainerRectTransform.sizeDelta.x / 2;
-		float containerY = _dragDropContainerRectTransform.sizeDelta.y / 2;
+//		float containerX = - _dragDropContainerRectTransform.sizeDelta.x / 2;
+//		float containerY = _dragDropContainerRectTransform.sizeDelta.y / 2;
 
-		_dragDropContainerRectTransform.anchorMin = new Vector2 (0.5f, 0.5f);
-		_dragDropContainerRectTransform.anchorMax = new Vector2 (0.5f, 0.5f);
+		_dragDropContainerRectTransform.anchorMin = new Vector2 (0, 1);
+		_dragDropContainerRectTransform.anchorMax = new Vector2 (0, 1);
 		_dragDropContainerRectTransform.pivot = new Vector2 (0, 1);
-		_dragDropContainerRectTransform.localPosition = new Vector3 (containerX, containerY, 0);
+//		_dragDropContainerRectTransform.localPosition = new Vector3 (containerX, containerY, 0);
 
 		_dragDropContainerGridLayoutGroup.enabled = false;
 	}
 
+	/// <summary>
+	/// Gets all objects.
+	/// </summary>
 	void GetAllObjects ()
 	{
 		for (int i = 0; i < dragDropObject.Length; i += 1)

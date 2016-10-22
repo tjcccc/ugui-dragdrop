@@ -17,7 +17,6 @@ public class DragDrop : MonoBehaviour
 
 	// Structure
 	private RectTransform _dragDropRectTransform;
-//	private Vector2 _dragDropRectSize;
 	private RectTransform _objectRectTransform;
 	private Vector2 _objectRectSize;
 
@@ -42,7 +41,7 @@ public class DragDrop : MonoBehaviour
 		_objectRectSize = _objectRectTransform.sizeDelta;
 	}
 
-    void Start ()
+	void Start ()
     {
         GetContainerStructure();
     }
@@ -51,8 +50,8 @@ public class DragDrop : MonoBehaviour
     {
         _spacingX = dragDropContainer.GetComponent<GridLayoutGroup>().spacing.x;
         _spacingY = dragDropContainer.GetComponent<GridLayoutGroup>().spacing.y;
+		_column = dragDropContainer.GetComponent<DragDrop_Container>().column;
         _row = dragDropContainer.GetComponent<DragDrop_Container>().row;
-        _column = dragDropContainer.GetComponent<DragDrop_Container>().column;
     }
 
 	Vector3 GetDragEndPosition ()
@@ -101,15 +100,14 @@ public class DragDrop : MonoBehaviour
 		x = 0 - (_objectRectTransform.localPosition.y + _dragEndPosition.y + _objectRectSize.y / 2) / (_objectRectSize.y + _spacingY);
 		y = (_objectRectTransform.localPosition.x + _dragEndPosition.x - _objectRectSize.x / 2) / (_objectRectSize.x + _spacingX);
 
-		// Debug.Log (_dragEndPosition.x.ToString () + ", " + _dragEndPosition.y.ToString ());
-		// Debug.Log (x.ToString () + ", " + y.ToString ());
+//		Debug.Log (_dragEndPosition.x.ToString () + ", " + _dragEndPosition.y.ToString ());
+//		Debug.Log (x.ToString () + ", " + y.ToString ());
 
 		x = GetClosetInteger (x, _row);
 		y = GetClosetInteger (y, _column);
 
-		// Debug.Log (x.ToString () + ", " + y.ToString ());
+//		Debug.Log (x.ToString () + ", " + y.ToString ());
 
-		// order = column * x + y
 		order = _column * (int)x + (int)y;
 
 		Debug.Log (order);
@@ -117,6 +115,9 @@ public class DragDrop : MonoBehaviour
 		return order;
 	}
 
+	/// <summary>
+	/// Raises the drag begin event.
+	/// </summary>
 	public void OnDragBegin ()
 	{
 		// Save current Team Member Order
@@ -129,6 +130,9 @@ public class DragDrop : MonoBehaviour
 		_dragDeltaBeginPosition = Input.mousePosition;
 	}
 
+	/// <summary>
+	/// Raises the drag event.
+	/// </summary>
 	public void OnDrag ()
 	{
 		_realtimeDragPosition = Input.mousePosition;
@@ -138,6 +142,9 @@ public class DragDrop : MonoBehaviour
 		_dragDropRectTransform.localPosition = _dragBeginPosition + new Vector3 (_dragDeltaPosition.x, _dragDeltaPosition.y, 0);
 	}
 
+	/// <summary>
+	/// Raises the drag end event.
+	/// </summary>
 	public void OnDragEnd ()
 	{
 		// Get Drag Object's DragEnd Order
