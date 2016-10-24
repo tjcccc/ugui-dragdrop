@@ -12,8 +12,9 @@ public class DragDrop : MonoBehaviour
 	public GameObject dragDropContainer;
 	public GameObject dragDropObject;
 
-	// A certain distance to decide whether it is in the place or not  
-//	public Vector2 detectMargin;
+	// DragDrop Data
+	[HideInInspector]
+	public Vector3 dragDropOriginalPosition;
 
 	// Structure
 	private RectTransform _dragDropRectTransform;
@@ -36,15 +37,12 @@ public class DragDrop : MonoBehaviour
 
 	void Awake ()
 	{
-		_dragDropRectTransform = GetComponent<RectTransform> ();
-		_objectRectTransform = transform.parent.gameObject.GetComponent<RectTransform> ();
+		_dragDropRectTransform = this.GetComponent<RectTransform> ();
+		_objectRectTransform = this.transform.parent.gameObject.GetComponent<RectTransform> ();
 		_objectRectSize = _objectRectTransform.sizeDelta;
-	}
 
-	void Start ()
-    {
-        GetContainerStructure();
-    }
+		dragDropOriginalPosition = _dragDropRectTransform.localPosition;
+	}
 
     void GetContainerStructure()
     {
@@ -57,6 +55,11 @@ public class DragDrop : MonoBehaviour
 	Vector3 GetDragEndPosition ()
 	{
 		return transform.localPosition;
+	}
+		
+	int GetObjectOrder ()
+	{
+		return dragDropObject.GetComponent<DragDrop_Object> ().objectOrder;
 	}
 
 	int GetClosetInteger (float f, int limit)
@@ -79,15 +82,12 @@ public class DragDrop : MonoBehaviour
 		}
 	}
 
-	int GetObjectOrder ()
-	{
-		return dragDropObject.GetComponent<DragDrop_Object> ().objectOrder;
-	}
-
 	int GetDragEndOrder ()
 	{
 		// objPosX + dragEndX = objW / 2  + (objW + SpaceX) * x
 		// objPosY + dragEndY = - objH / 2 - (objH + SpaceY) * y
+
+		GetContainerStructure ();
 
 		float x;
 		float y;
@@ -110,7 +110,7 @@ public class DragDrop : MonoBehaviour
 
 		order = _column * (int)x + (int)y;
 
-		Debug.Log (order);
+//		Debug.Log (order);
 
 		return order;
 	}
@@ -172,8 +172,11 @@ public class DragDrop : MonoBehaviour
         // Change Position of _replacedMember and DragMember
         dragDropContainer.GetComponent<DragDrop_Container>().ChangeObjectPosition(dragDropObject, _replacedObject);
 
+		// Reset DragDrop handler's position
+		_dragDropRectTransform.localPosition = dragDropOriginalPosition;
+
         yield return new WaitForSeconds (dragDropContainer.GetComponent<DragDrop_Container>().autoMoveSpeed);
 
-        dragDropContainer.GetComponent<GridLayoutGroup>().enabled = true;
+		dragDropContainer.GetComponent<GridLayoutGroup>().enabled = true;
     }
 }
