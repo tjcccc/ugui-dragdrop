@@ -69,7 +69,7 @@ public class DragDrop_Container : MonoBehaviour
 //		_dragDropContainerRectTransform.anchorMax = new Vector2 (0, 1);
 		_dragDropContainerRectTransform.pivot = new Vector2 (0, 1);
 	}
-
+		
 	/// <summary>
 	/// Sets the object related arrays.
 	/// </summary>
@@ -97,6 +97,7 @@ public class DragDrop_Container : MonoBehaviour
 		for (int i = 0; i < dragDropObject.Length; i += 1)
 		{
 			dragDropObject [i] = transform.GetChild (i).gameObject;
+			dragDropObject [i].GetComponent<DragDrop_Object> ().objectOrder = i;
 		}
 	}
 

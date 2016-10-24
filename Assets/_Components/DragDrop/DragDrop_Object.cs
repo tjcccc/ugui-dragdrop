@@ -3,6 +3,7 @@ using System.Collections;
 
 public class DragDrop_Object : MonoBehaviour
 {
+	[HideInInspector]
 	public int objectOrder;
 
 	/// <summary>

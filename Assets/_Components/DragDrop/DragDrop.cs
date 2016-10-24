@@ -9,7 +9,9 @@ using DG.Tweening;
 public class DragDrop : MonoBehaviour
 {
 	// DragDrop Group
+	[HideInInspector]
 	public GameObject dragDropContainer;
+	[HideInInspector]
 	public GameObject dragDropObject;
 
 	// DragDrop Data
@@ -41,6 +43,8 @@ public class DragDrop : MonoBehaviour
 		_objectRectTransform = this.transform.parent.gameObject.GetComponent<RectTransform> ();
 		_objectRectSize = _objectRectTransform.sizeDelta;
 
+		dragDropContainer = this.transform.parent.parent.gameObject;
+		dragDropObject = this.transform.parent.gameObject;
 		dragDropOriginalPosition = _dragDropRectTransform.localPosition;
 	}
 
