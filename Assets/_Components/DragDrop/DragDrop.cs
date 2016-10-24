@@ -120,8 +120,10 @@ public class DragDrop : MonoBehaviour
 	/// </summary>
 	public void OnDragBegin ()
 	{
-		// Save current Team Member Order
-		_originalOrder = GetObjectOrder ();
+        dragDropContainer.GetComponent<GridLayoutGroup> ().enabled = false;
+
+        // Save current Team Member Order
+        _originalOrder = GetObjectOrder ();
 
 		// Display in the top layer
 		dragDropObject.transform.SetAsLastSibling ();
@@ -147,23 +149,31 @@ public class DragDrop : MonoBehaviour
 	/// </summary>
 	public void OnDragEnd ()
 	{
-		// Get Drag Object's DragEnd Order
-		_dragEndOrder = GetDragEndOrder ();
+        StartCoroutine (OnDragEndIEnumerator());
+    }
 
-		// Get Replaced Object by DragEnd Order
-		_replacedObject = dragDropContainer.GetComponent<DragDrop_Container> ().GetObjectByOrder (_dragEndOrder);
+    IEnumerator OnDragEndIEnumerator()
+    {
+        // Get Drag Object's DragEnd Order
+        _dragEndOrder = GetDragEndOrder();
 
-		// Change _replacedMember's order to _originalOrder
-		_replacedObject.GetComponent<DragDrop_Object> ().ChangeObjectOrder (_originalOrder);
+        // Get Replaced Object by DragEnd Order
+        _replacedObject = dragDropContainer.GetComponent<DragDrop_Container>().GetObjectByOrder(_dragEndOrder);
 
-		// Change DragMember (this Member) 's order to dragEndOrder
-		dragDropObject.GetComponent<DragDrop_Object> ().ChangeObjectOrder (_dragEndOrder);
+        // Change _replacedMember's order to _originalOrder
+        _replacedObject.GetComponent<DragDrop_Object>().ChangeObjectOrder(_originalOrder);
 
-		// Change GameObject of _replaceMember and DragMember
-		dragDropContainer.GetComponent<DragDrop_Container> ().ChangeObjectByOrder (_dragEndOrder, _originalOrder);
+        // Change DragMember (this Member) 's order to dragEndOrder
+        dragDropObject.GetComponent<DragDrop_Object>().ChangeObjectOrder(_dragEndOrder);
 
-		// Change Position of _replacedMember and DragMember
-		dragDropContainer.GetComponent<DragDrop_Container> ().ChangeObjectPosition (dragDropObject, _replacedObject);
+        // Change GameObject of _replaceMember and DragMember
+        dragDropContainer.GetComponent<DragDrop_Container>().ChangeObjectByOrder(_dragEndOrder, _originalOrder);
 
-	}
+        // Change Position of _replacedMember and DragMember
+        dragDropContainer.GetComponent<DragDrop_Container>().ChangeObjectPosition(dragDropObject, _replacedObject);
+
+        yield return new WaitForSeconds (dragDropContainer.GetComponent<DragDrop_Container>().autoMoveSpeed);
+
+        dragDropContainer.GetComponent<GridLayoutGroup>().enabled = true;
+    }
 }

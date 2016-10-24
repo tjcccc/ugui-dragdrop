@@ -57,7 +57,7 @@ public class DragDrop_Container : MonoBehaviour
 		_dragDropContainerRectTransform.pivot = new Vector2 (0, 1);
 //		_dragDropContainerRectTransform.localPosition = new Vector3 (containerX, containerY, 0);
 
-		_dragDropContainerGridLayoutGroup.enabled = false;
+		//_dragDropContainerGridLayoutGroup.enabled = false;
 	}
 
 	/// <summary>

@@ -60,7 +60,7 @@ Grid Layout Group 所在对象的 Rect Transform 的 Anchors 不可用 Stretch �
 
 此脚本需要挂在 DragDrop_Container 下每一个被拖动的对象上。
 
-**注意**：对象不能与不存在的对象进行位置交换，如果想让对象移动到一个空的位置（与「空」交换），请在该位置添加一个不可见（Inactive or alpha = 0）的对象。
+**注意**：对象不能与不存在的对象进行位置（空白处）交换~~，如果想让对象移动到一个空的位置（与「空」交换），请在该位置添加一个不可见（Inactive or alpha = 0）的对象~~。
 
 ![](doc_attachments/pic1.png)
 
