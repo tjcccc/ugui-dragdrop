@@ -32,8 +32,8 @@ public class DragDrop_Container : MonoBehaviour
 
     void Awake ()
 	{
-        _dragDropContainerRectTransform = GetComponent<RectTransform>();
-        _dragDropContainerGridLayoutGroup = GetComponent<GridLayoutGroup>();
+        _dragDropContainerRectTransform = this.GetComponent<RectTransform> ();
+        _dragDropContainerGridLayoutGroup = this.GetComponent<GridLayoutGroup> ();
     }
 
 	IEnumerator Start ()

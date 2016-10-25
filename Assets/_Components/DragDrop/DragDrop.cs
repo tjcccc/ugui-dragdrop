@@ -43,9 +43,17 @@ public class DragDrop : MonoBehaviour
 		_objectRectTransform = this.transform.parent.gameObject.GetComponent<RectTransform> ();
 		_objectRectSize = _objectRectTransform.sizeDelta;
 
+		if (this.transform.parent && this.transform.parent.parent)
+		{
+			ConnectRelatives ();
+		}
+		dragDropOriginalPosition = _dragDropRectTransform.localPosition;
+	}
+
+	public void ConnectRelatives ()
+	{
 		dragDropContainer = this.transform.parent.parent.gameObject;
 		dragDropObject = this.transform.parent.gameObject;
-		dragDropOriginalPosition = _dragDropRectTransform.localPosition;
 	}
 
     void GetContainerStructure()

@@ -52,7 +52,7 @@ girdRectTransform.pivot = new Vector2 (0, 1);  // 脚本中也会强制设置。
 
 - Grid Type: 初始化 DragDrop_Container 所在 Grid 的布局等内容。有两种方式：
     - Static: 静态初始化。Object在启动前就已放置好，程序启动时直接自动初始化。
-    - Dynamic: 动态初始化。请在 Resources 或 AseetBundle 读取并陈列完对象后，调用 DragDrop_Container 的 InitializeAfterDataLoaded () 方法初始化。
+    - Dynamic: 动态初始化。请在动态读取每一个 DragDrop Object 并设置为 DragDrop_Container 的子对象后调用 DragDrop Handler 的 ConnectRelatives () 方法建立层级关联。然后，在全部 DragDrop Object 读取完之后，调用 DragDrop_Container 的 InitializeAfterDataLoaded () 方法初始化。
 - Auto Move Speed: 填写交换位置所需要的时间（秒）。默认为0.2秒。
 
 ### DragDrop_Object.cs 配置
