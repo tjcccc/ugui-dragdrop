@@ -8,7 +8,7 @@ uGUI 通用交互实践：矩阵列表对象元素的拖动、放下与交换。
 
 ## 开发版本与依赖
 
-- **Unity** ver. 5.4.2p1
+- **Unity** ver. 5.5.0f3
 - **DOTween** ver. 1.1.310
 
 ## 实现原理
@@ -44,7 +44,7 @@ DragDrop_Object 与 DragDrop 分开的目的：
 
 ![](doc_attachments/pic0.png)
 
-Grid Layout Group 所在对象的 Rect Transform 的 Anchors 不可用 Stretch 方式，会使其元素位置错乱。同时，pivot 必须设置为 (0, 1)：
+Grid Layout Group 所在对象的 Rect Transform 的 Anchors 不可用 Stretch 方式，会使其元素位置错乱。同时，pivot 须设置为 (0, 1)：
 
 ```
 girdRectTransform.pivot = new Vector2 (0, 1);  // 脚本中也会强制设置。
@@ -52,14 +52,14 @@ girdRectTransform.pivot = new Vector2 (0, 1);  // 脚本中也会强制设置。
 
 - Grid Type: 初始化 DragDrop_Container 所在 Grid 的布局等内容。有两种方式：
     - Static: 静态初始化。Object在启动前就已放置好，程序启动时直接自动初始化。
-    - Dynamic: 动态初始化。请在动态读取每一个 DragDrop Object 并设置为 DragDrop_Container 的子对象后调用 DragDrop Handler 的 ConnectRelatives () 方法建立层级关联。然后，在全部 DragDrop Object 读取完之后，调用 DragDrop_Container 的 InitializeAfterDataLoaded () 方法初始化。
+    - Dynamic: 动态初始化。请在动态读取每一个 DragDrop Object 并设置为 DragDrop_Container 的子对象后调用 DragDrop Handler 的 ConnectRelatives() 方法建立层级关联。然后，在全部 DragDrop Object 读取完之后，调用 DragDrop_Container 的 InitializeDragDrop() 方法初始化。
 - Auto Move Speed: 填写交换位置所需要的时间（秒）。默认为0.2秒。
 
 ### DragDrop_Object.cs 配置
 
 此脚本需要挂在 DragDrop_Container 所在 Grid 下的每一个子对象上。
 
-**注意**：对象不能与不存在的对象进行位置（空白处）交换~~，如果想让对象移动到一个空的位置（与「空」交换），请在该位置添加一个不可见（Inactive or alpha = 0）的对象~~。
+**注意**：对象不能与不存在的对象（inactive GameObject）进行位置（空白处）交换~~，如果想让对象移动到一个空的位置（与「空」交换），请在该位置添加一个不可见（Inactive or alpha = 0）的对象~~。
 
 ![](doc_attachments/pic1.png)
 
@@ -94,3 +94,5 @@ DragDrop_Object 不可见。拖动放开后，直接交互拖动元素（DragDro
 ### Example 4
 
 行数与列数不同情况下的拖动与交换示例。
+
+

@@ -10,7 +10,7 @@ public class DragDrop_Object : MonoBehaviour
 	/// Changes the object order.
 	/// </summary>
 	/// <param name="order">Order.</param>
-	public void ChangeObjectOrder (int order)
+	public void ChangeObjectOrder(int order)
 	{
 		objectOrder = order;
 	}

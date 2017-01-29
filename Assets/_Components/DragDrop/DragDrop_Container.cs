@@ -14,66 +14,59 @@ public class DragDrop_Container : MonoBehaviour
 
 	public GridType gridType;
 
-    // Drag and Drop Objects
-    [HideInInspector]
-    public GameObject[] dragDropObject;
-    [HideInInspector]
-    public Vector3[] dragDropObjectPosition;
-    [HideInInspector]
+	// Drag and Drop Objects
+	[HideInInspector]
+	public GameObject[] dragDropObject;
+	[HideInInspector]
+	public Vector3[] dragDropObjectPosition;
+	[HideInInspector]
 	public int column;
-    [HideInInspector]
+	[HideInInspector]
 	public int row;
 
-    public float autoMoveSpeed = 0.2f;
+	public float autoMoveSpeed = 0.2f;
 
 	private RectTransform _dragDropContainerRectTransform;
 	private GridLayoutGroup _dragDropContainerGridLayoutGroup;
-    private int _objectAmount;
+	private int _objectAmount;
 
-    void Awake ()
+	void Awake()
 	{
-        _dragDropContainerRectTransform = this.GetComponent<RectTransform> ();
-        _dragDropContainerGridLayoutGroup = this.GetComponent<GridLayoutGroup> ();
-    }
+		_dragDropContainerRectTransform = this.GetComponent<RectTransform>();
+		_dragDropContainerGridLayoutGroup = this.GetComponent<GridLayoutGroup>();
+	}
 
-	IEnumerator Start ()
+	IEnumerator Start()
 	{
 		if (gridType == GridType.Static)
 		{
-			yield return new WaitForFixedUpdate ();
-			SetObjectRelatedArrays ();
-			GetColumnAndRow ();
-			GetAllObjects ();
-			GetObjectPosition ();
-			SetAllObjectsOrder ();
-			InitializeContainer ();
+			yield return new WaitForFixedUpdate();
+			this.InitializeDragDrop();
 		}
 	}
 
-	public void InitializeAfterDataLoaded ()
+	public void InitializeDragDrop()
 	{
-		SetObjectRelatedArrays ();
-		GetColumnAndRow ();
-		GetAllObjects ();
-		GetObjectPosition ();
-		SetAllObjectsOrder ();
-		InitializeContainer ();
+		this.SetObjectRelatedArrays();
+		this.GetColumnAndRow();
+		this.SetAllObjectsWithOrder();
+		this.GetObjectPosition();
+		this.SetStaticRelatives();
+		this.InitializeContainer();
 	}
 
 	/// <summary>
 	/// Initializes the container.
 	/// </summary>
-	void InitializeContainer ()
+	void InitializeContainer()
 	{
-//		_dragDropContainerRectTransform.anchorMin = new Vector2 (0, 1);
-//		_dragDropContainerRectTransform.anchorMax = new Vector2 (0, 1);
-		_dragDropContainerRectTransform.pivot = new Vector2 (0, 1);
+		_dragDropContainerRectTransform.pivot = new Vector2(0, 1);
 	}
-		
+
 	/// <summary>
 	/// Sets the object related arrays.
 	/// </summary>
-	void SetObjectRelatedArrays ()
+	void SetObjectRelatedArrays()
 	{
 		_objectAmount = transform.childCount;
 		dragDropObject = new GameObject[_objectAmount];
@@ -83,32 +76,35 @@ public class DragDrop_Container : MonoBehaviour
 	/// <summary>
 	/// Gets the column and row.
 	/// </summary>
-	void GetColumnAndRow ()
+	void GetColumnAndRow()
 	{
 		column = (int)(_dragDropContainerRectTransform.sizeDelta.x + _dragDropContainerGridLayoutGroup.spacing.x) / (int)(_dragDropContainerGridLayoutGroup.cellSize.x + _dragDropContainerGridLayoutGroup.spacing.x);
 		row = ((float)_objectAmount / column) > (_objectAmount / column) ? (_objectAmount / column) + 1 : (_objectAmount / column);
 	}
 
 	/// <summary>
-	/// Gets all objects.
+	/// Sets all objects with order.
 	/// </summary>
-	void GetAllObjects ()
+	void SetAllObjectsWithOrder()
 	{
 		for (int i = 0; i < dragDropObject.Length; i += 1)
 		{
-			dragDropObject [i] = transform.GetChild (i).gameObject;
-			dragDropObject [i].GetComponent<DragDrop_Object> ().objectOrder = i;
+			dragDropObject[i] = transform.GetChild(i).gameObject;
+			dragDropObject[i].GetComponent<DragDrop_Object>().objectOrder = i;
 		}
 	}
 
 	/// <summary>
 	/// Sets all objects order.
 	/// </summary>
-	void SetAllObjectsOrder ()
+	void SetStaticRelatives()
 	{
-		for (int i = 0; i < dragDropObject.Length; i += 1)
+		if (gridType == GridType.Static)
 		{
-			dragDropObject [i].GetComponent<DragDrop_Object> ().objectOrder = i;
+			for (int i = 0; i < dragDropObject.Length; i += 1)
+			{
+				dragDropObject[i].GetComponentInChildren<DragDrop>().ConnectRelatives();
+			}
 		}
 	}
 
@@ -117,9 +113,9 @@ public class DragDrop_Container : MonoBehaviour
 	/// </summary>
 	/// <returns>The object order.</returns>
 	/// <param name="dragDropObject">Drag drop object.</param>
-	int GetObjectOrder (GameObject dragDropObject)
+	int GetObjectOrder(GameObject dragDropObject)
 	{
-		return dragDropObject.GetComponent<DragDrop_Object> ().objectOrder;
+		return dragDropObject.GetComponent<DragDrop_Object>().objectOrder;
 	}
 
 	/// <summary>
@@ -127,15 +123,15 @@ public class DragDrop_Container : MonoBehaviour
 	/// </summary>
 	/// <returns>The object by order.</returns>
 	/// <param name="order">Order.</param>
-	public GameObject GetObjectByOrder (int order)
+	public GameObject GetObjectByOrder(int order)
 	{
-		return dragDropObject [order];
+		return dragDropObject[order];
 	}
 
 	/// <summary>
 	/// Gets the object position.
 	/// </summary>
-	public void GetObjectPosition ()
+	public void GetObjectPosition()
 	{
 		Vector3[,] position = new Vector3[row, column];
 		for (int i = 0; i < row; i += 1)
@@ -144,22 +140,22 @@ public class DragDrop_Container : MonoBehaviour
 			{
 				float x = _dragDropContainerGridLayoutGroup.cellSize.x / 2 + (_dragDropContainerGridLayoutGroup.cellSize.x + _dragDropContainerGridLayoutGroup.spacing.x) * j;
 				float y = 0 - _dragDropContainerGridLayoutGroup.cellSize.y / 2 - (_dragDropContainerGridLayoutGroup.cellSize.y + _dragDropContainerGridLayoutGroup.spacing.y) * i;
-				position [i, j] = new Vector3 (x, y, 0);
+				position[i, j] = new Vector3(x, y, 0);
 			}
 		}
 
 		for (int i = 0; i < dragDropObject.Length; i += 1)
 		{
-			dragDropObjectPosition [i] = position [i / column, i - (i / column) * column];
+			dragDropObjectPosition[i] = position[i / column, i - (i / column) * column];
 		}
 	}
 
 	/// <summary>
 	/// Sets the object hierarchy.
 	/// </summary>
-	void SetObjectHierarchy (GameObject dragDropObject, int order)
+	void SetObjectHierarchy(GameObject dragDropObject, int order)
 	{
-		dragDropObject.transform.SetSiblingIndex (order);
+		dragDropObject.transform.SetSiblingIndex(order);
 	}
 
 	/// <summary>
@@ -167,11 +163,11 @@ public class DragDrop_Container : MonoBehaviour
 	/// </summary>
 	/// <param name="dragObjectOrder">Drag object order.</param>
 	/// <param name="replacedObjectOrder">Replaced object order.</param>
-	public void ChangeObjectByOrder (int dragObjectOrder, int replacedObjectOrder)
+	public void ChangeObjectByOrder(int dragObjectOrder, int replacedObjectOrder)
 	{
-		GameObject temp = dragDropObject [dragObjectOrder];
-		dragDropObject [dragObjectOrder] = dragDropObject [replacedObjectOrder];
-		dragDropObject [replacedObjectOrder] = temp;
+		GameObject temp = dragDropObject[dragObjectOrder];
+		dragDropObject[dragObjectOrder] = dragDropObject[replacedObjectOrder];
+		dragDropObject[replacedObjectOrder] = temp;
 	}
 
 	/// <summary>
@@ -179,15 +175,15 @@ public class DragDrop_Container : MonoBehaviour
 	/// </summary>
 	/// <param name="dragObject">Drag object.</param>
 	/// <param name="replacedObject">Replaced object.</param>
-	public void ChangeObjectPosition (GameObject dragObject, GameObject replacedObject)
+	public void ChangeObjectPosition(GameObject dragObject, GameObject replacedObject)
 	{
-		int dragObjectOrder = GetObjectOrder (dragObject);
-		int replacedObjectOrder = GetObjectOrder (replacedObject);
+		int dragObjectOrder = GetObjectOrder(dragObject);
+		int replacedObjectOrder = GetObjectOrder(replacedObject);
 
-		dragObject.transform.DOLocalMove (dragDropObjectPosition [dragObjectOrder], autoMoveSpeed);
-		replacedObject.transform.DOLocalMove (dragDropObjectPosition [replacedObjectOrder], autoMoveSpeed);
+		dragObject.transform.DOLocalMove(dragDropObjectPosition[dragObjectOrder], autoMoveSpeed);
+		replacedObject.transform.DOLocalMove(dragDropObjectPosition[replacedObjectOrder], autoMoveSpeed);
 
-		SetObjectHierarchy (dragObject, dragObjectOrder);
-		SetObjectHierarchy (replacedObject, replacedObjectOrder);
+		SetObjectHierarchy(dragObject, dragObjectOrder);
+		SetObjectHierarchy(replacedObject, replacedObjectOrder);
 	}
 }
