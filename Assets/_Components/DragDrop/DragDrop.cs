@@ -24,6 +24,7 @@ public class DragDrop : MonoBehaviour
 	private Vector2 _objectRectSize;
 
 	// Drag Event Variables
+	private int _dragDropAmount;
 	private int _originalOrder;
 	private int _dragEndOrder;
 	private GameObject _replacedObject;
@@ -114,7 +115,8 @@ public class DragDrop : MonoBehaviour
 
 //		Debug.Log("order x & y: " + orderX.ToString() + ", " + orderY.ToString());
 
-		order = _column * orderX + orderY;
+		_dragDropAmount = dragDropContainer.GetComponent<DragDrop_Container>().dragDropObject.Length;
+		order = (_column * orderX + orderY) <= (_dragDropAmount - 1) ? (_column * orderX + orderY) : (_dragDropAmount - 1);
 
 //		Debug.Log("order: " + order);
 
