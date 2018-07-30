@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DragDrop_Object : MonoBehaviour
+public class DragDropObject : MonoBehaviour
 {
-	[HideInInspector]
-	public int objectOrder;
+	[HideInInspector] public int ObjectOrder;
 
 	/// <summary>
 	/// Changes the object order.
@@ -12,7 +11,7 @@ public class DragDrop_Object : MonoBehaviour
 	/// <param name="order">Order.</param>
 	public void ChangeObjectOrder(int order)
 	{
-		objectOrder = order;
+		ObjectOrder = order;
 	}
 
 }
