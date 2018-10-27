@@ -4,7 +4,7 @@ uGUI 通用交互实践：矩阵列表对象元素的拖动、放下与交换。
 
 ## 主要功能
 
-在Grid布局区域内，拖动其中任一对象 ，将其拖到任一位置，放开后，自动使其与附近对象进行位置交换。
+在 Grid 布局区域内，拖动其中任一对象 ，将其拖到任一位置，放开后，自动使其与附近对象进行位置交换。
 
 ## 开发版本与依赖
 
@@ -47,13 +47,14 @@ DragDropObject 与 DragDrop 分开的目的：
 Grid Layout Group 所在对象的 Rect Transform 的 Anchors 不可用 Stretch 方式，会使其元素位置错乱。同时，pivot 须设置为 (0, 1)：
 
 ```csharp
-// 脚本中也会强制设置。
+// 脚本中会强制设置。
 girdRectTransform.pivot = new Vector2 (0, 1);
 ```
 
 - Grid Type: 初始化 DragDropContainer 所在 Grid 的布局等内容。有两种方式：
   - Static: 静态初始化。Object在启动前就已放置好，程序启动时直接自动初始化。
-  - Dynamic: 动态初始化。请在动态读取每一个 DragDrop Object 并设置为 DragDropContainer 的子对象后调用 DragDrop Handler 的 ConnectRelatives() 方法建立层级关联。然后，在全部 DragDrop Object 读取完之后，调用 DragDropContainer 的 InitializeDragDrop() 方法初始化。
+  - Dynamic: 动态初始化。请在动态读取每一个 DragDrop Object 并设置为 DragDropContainer 的子对象后调用 DragDrop Handler 的 `ConnectRelatives()` 方法建立层级关联。然后，在全部 DragDrop Object 读取完之后，调用 DragDropContainer 的 `InitializeDragDrop()` 方法初始化。
+- Canvas: 挂载 DragDropContainer 所在的 UI Canvas，确保在不同分辨率下可以没有偏差地拖动物件。
 - Auto Move Speed: 填写交换位置所需要的时间（秒）。默认为0.2秒。
 
 ### DragDropObject.cs 配置
@@ -72,9 +73,9 @@ girdRectTransform.pivot = new Vector2 (0, 1);
 
 本脚本的拖动放下操作使用 uGUI 内置的 Event Trigger 控制。请添加此组件，并加入三种委托：
 
-- Begin Drag: 使用DragDrop.OnDragBeign() 方法。
-- Drag: 使用DragDrop.OnDrag() 方法。
-- End Drag: 使用DragDrop.OnDragEnd() 方法。
+- Begin Drag: 调用 `DragDrop.OnDragBegin()` 方法。
+- Dragging: 调用 `DragDrop.OnDrag()` 方法。
+- End Drag: 调用 `DragDrop.OnDragEnd()` 方法。
 
 用户自己的方法也可以插入其中。
 
