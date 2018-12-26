@@ -18,7 +18,7 @@ In a game object group which is arranged by Unity UI grid system, when you drag 
 1. Store the matrix Order and initial Position of every DragDrop GameObject.
 2. When a game object (DragDrop Handler) is being dragged, get the matrix Order and realtime Position of it.
 3. When the DragDrop GameObject is dropped, get the nearest GameObject by the dropping place's position and store the matrix Order of that game object (Replaced GameObject).
-4. Exchange the DragDrop Handler GameObject's matrix Order with Replaced GameObject.
+4. Exchange the DragDrop Handler GameObject's matrix Order with the Replaced GameObject.
 5. Change the two GameObjects' Position by DOTween. You can also use your own tween ways.
 
 ## How to Use
@@ -36,15 +36,15 @@ The reason for separating DragDropObject and DragDrop:
 
 - Make the structure more distinct.
 - For calculating the position easily.
-- To separate handler and substance. For instance: when you dragging an icon, you might need a semi-transparent icon image (the handler) to follow your mouse only and the real icon (substance) should't change its position until you release the handler.  
+- To separate handler and substance. For instance: when you dragging an icon, you might need a semi-transparent icon image (the handler) to follow your mouse only and the real icon (substance) shouldn't change its position until you release the handler.  
 
-If you need realtime positions exchange, you could set the DragDropObject to invisible (e.g. alpha = 0). DragDropObject is necessary in current version, it stores the matrix Order.
+If you need realtime positions exchange, you can set the DragDropObject to invisible (e.g. alpha = 0). DragDropObject is necessary in current version, it stores the matrix Order.
 
 ### DragDropContainer.cs Configuration
 
 This script should be attached to the container game object which has Grid Layout Group component.
 
-![](doc_attachments/pic0.png)
+![DragDropContainer](./doc_attachments/pic0.png)
 
 The RectTransform's Anchors property should not be set to Stretch. Otherwise, the game objects will be in disorder.
 
@@ -55,7 +55,7 @@ The RectTransform's Pivot property should be `(0, 1)`:
 girdRectTransform.pivot = new Vector2 (0, 1);
 ```
 
-- Grid Type: Initialize DragDropContainer's grid. There're two options:
+- Grid Type: For Initializing DragDropContainer's grid. There're two options:
   - Static: Static Initialization. Game objects should be arranged in grid before project's running.
   - Dynamic: Dynamic Initialization. After one game object is loaded, it will be set as the child of DragDropContainer, then the `ConnectRelatives()` will be called to set their relationship; After all game objects are loaded, `InitializeDragDrop()` of DragDropContainer will be called to initialize them.
 - Canvas: DragDropContainer's UICanvas component. It is ensured that the dragging track of object will not be offset in different screen resolutions.
@@ -65,17 +65,17 @@ girdRectTransform.pivot = new Vector2 (0, 1);
 
 This script should be attached to each child game object of DragDropContainer.
 
-**Notice**: It is unable to exchange position with an inactive GameObject (or nothing). 
+**Notice**: It is unable to exchange position with an inactive GameObject (or nothing).
 
-![](doc_attachments/pic1.png)
+![DragDropObject](./doc_attachments/pic1.png)
 
 ### DragDrop.cs Configuration
 
 This script should be attached to a child game object of DragDropObject. It is the handler for dragging, you should set a suitable size for it.
 
-![](doc_attachments/pic2.png)
+![DragDrop](./doc_attachments/pic2.png)
 
-This script use Event Trigger which is provided by uGUI. You should add that component and add 3 delegates:
+This script use Event Trigger which is provided by uGUI. You should add that component with 3 delegates:
 
 - Begin Drag: Invoke `DragDrop.OnDragBegin()`.
 - Dragging: Invoke `DragDrop.OnDrag()`.
