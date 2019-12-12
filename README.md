@@ -10,7 +10,7 @@ In a game object group which is arranged by Unity UI grid system, when you drag 
 
 ## Environment and Dependency Plugins
 
-- **Unity** ver. 5.6.6f2
+- **Unity** ver. 2019.3f1
 - **DOTween** ver. 1.1.310
 
 ## Implementation Method

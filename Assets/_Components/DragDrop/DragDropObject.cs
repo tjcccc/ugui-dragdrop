@@ -2,7 +2,7 @@
 
 public class DragDropObject : MonoBehaviour
 {
-    [HideInInspector] public int ObjectOrder;
+    [HideInInspector] public int objectOrder;
 
     /// <summary>
     /// Changes the object order.
@@ -10,7 +10,7 @@ public class DragDropObject : MonoBehaviour
     /// <param name="order">Order.</param>
     public void ChangeObjectOrder(int order)
     {
-        ObjectOrder = order;
+        objectOrder = order;
     }
 
 }
