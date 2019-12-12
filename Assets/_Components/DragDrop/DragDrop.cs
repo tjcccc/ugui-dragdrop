@@ -5,11 +5,11 @@ using UnityEngine.UI;
 public class DragDrop : MonoBehaviour
 {
     // DragDrop Group
-    [HideInInspector] public GameObject DragDropContainer;
-    [HideInInspector] public GameObject DragDropObject;
+    [HideInInspector] public GameObject dragDropContainer;
+    [HideInInspector] public GameObject dragDropObject;
 
     // DragDrop Data
-    [HideInInspector] public Vector3 DragDropOriginalPosition;
+    [HideInInspector] public Vector3 dragDropOriginalPosition;
 
     // Structure
     private RectTransform _dragDropRectTransform;
@@ -37,25 +37,26 @@ public class DragDrop : MonoBehaviour
     private void Awake()
     {
         _dragDropRectTransform = GetComponent<RectTransform>();
-        DragDropOriginalPosition = _dragDropRectTransform.anchoredPosition;
+        dragDropOriginalPosition = _dragDropRectTransform.anchoredPosition;
     }
 
     public void ConnectRelatives()
     {
-        DragDropContainer = transform.parent.parent.gameObject;
-        DragDropObject = transform.parent.gameObject;
-        _canvas = DragDropContainer.GetComponent<DragDropContainer>().Canvas;
+        var transformParent = transform.parent;
+        dragDropContainer = transformParent.parent.gameObject;
+        dragDropObject = transformParent.gameObject;
+        _canvas = dragDropContainer.GetComponent<DragDropContainer>().canvas;
 
-        _objectRectSize = DragDropContainer.GetComponent<GridLayoutGroup>().cellSize;
-        _objectRectTransform = DragDropObject.GetComponent<RectTransform>();
+        _objectRectSize = dragDropContainer.GetComponent<GridLayoutGroup>().cellSize;
+        _objectRectTransform = dragDropObject.GetComponent<RectTransform>();
     }
 
     private void GetContainerStructure()
     {
-        _spacingX = DragDropContainer.GetComponent<GridLayoutGroup>().spacing.x;
-        _spacingY = DragDropContainer.GetComponent<GridLayoutGroup>().spacing.y;
-        _column = DragDropContainer.GetComponent<DragDropContainer>().Column;
-        _row = DragDropContainer.GetComponent<DragDropContainer>().Row;
+        _spacingX = dragDropContainer.GetComponent<GridLayoutGroup>().spacing.x;
+        _spacingY = dragDropContainer.GetComponent<GridLayoutGroup>().spacing.y;
+        _column = dragDropContainer.GetComponent<DragDropContainer>().column;
+        _row = dragDropContainer.GetComponent<DragDropContainer>().row;
     }
 
     private Vector3 GetDragEndPosition()
@@ -65,7 +66,7 @@ public class DragDrop : MonoBehaviour
 
     private int GetObjectOrder()
     {
-        return DragDropObject.GetComponent<DragDropObject>().ObjectOrder;
+        return dragDropObject.GetComponent<DragDropObject>().objectOrder;
     }
 
     private static int GetClosetInteger(float floatNumber, int limit)
@@ -97,8 +98,9 @@ public class DragDrop : MonoBehaviour
 
         // Get arrange order (row, column)
         // [(final + rectW/2) - spaceX(x-1)] / rectW = x
-        var rowX = ((0 - (_objectRectTransform.anchoredPosition.y + _dragEndPosition.y)) + (_objectRectSize.y * 0.5f) + _spacingY) / (_objectRectSize.y + _spacingY) - 1;
-        var columnY = (_objectRectTransform.anchoredPosition.x + _dragEndPosition.x + (_objectRectSize.x * 0.5f) + _spacingX) / (_objectRectSize.x + _spacingX) - 1;
+        var objectAnchoredPosition = _objectRectTransform.anchoredPosition;
+        var rowX = ((0 - (objectAnchoredPosition.y + _dragEndPosition.y)) + (_objectRectSize.y * 0.5f) + _spacingY) / (_objectRectSize.y + _spacingY) - 1;
+        var columnY = (objectAnchoredPosition.x + _dragEndPosition.x + (_objectRectSize.x * 0.5f) + _spacingX) / (_objectRectSize.x + _spacingX) - 1;
 
 //        Debug.Log("finalX: " + (_objectRectTransform.localPosition.x + _dragEndPosition.x).ToString());
 
@@ -109,7 +111,7 @@ public class DragDrop : MonoBehaviour
 
 //        Debug.Log("order x & y: " + orderX.ToString() + ", " + orderY.ToString());
 
-        _dragDropAmount = DragDropContainer.GetComponent<DragDropContainer>().DragDropObject.Length;
+        _dragDropAmount = dragDropContainer.GetComponent<DragDropContainer>().dragDropObjects.Length;
         var order = (_column * orderX + orderY) <= (_dragDropAmount - 1) ? (_column * orderX + orderY) : (_dragDropAmount - 1);
 
 //        Debug.Log("order: " + order);
@@ -122,13 +124,13 @@ public class DragDrop : MonoBehaviour
     /// </summary>
     public void OnDragBegin()
     {
-        DragDropContainer.GetComponent<GridLayoutGroup>().enabled = false;
+        dragDropContainer.GetComponent<GridLayoutGroup>().enabled = false;
 
         // Save current Team Member Order
         _originalOrder = GetObjectOrder();
 
         // Display in the top layer
-        DragDropObject.transform.SetAsLastSibling();
+        dragDropObject.transform.SetAsLastSibling();
 
         _dragBeginPosition = _dragDropRectTransform.anchoredPosition;
         _dragDeltaBeginPosition = Input.mousePosition;
@@ -161,25 +163,25 @@ public class DragDrop : MonoBehaviour
         _dragEndOrder = GetDragEndOrder();
 
         // Get Replaced Object by DragEnd Order
-        _replacedObject = DragDropContainer.GetComponent<DragDropContainer>().GetObjectByOrder(_dragEndOrder);
+        _replacedObject = dragDropContainer.GetComponent<DragDropContainer>().GetObjectByOrder(_dragEndOrder);
 
         // Change _replacedMember's order to _originalOrder
         _replacedObject.GetComponent<DragDropObject>().ChangeObjectOrder(_originalOrder);
 
         // Change DragMember (this Member) 's order to dragEndOrder
-        DragDropObject.GetComponent<DragDropObject>().ChangeObjectOrder(_dragEndOrder);
+        dragDropObject.GetComponent<DragDropObject>().ChangeObjectOrder(_dragEndOrder);
 
         // Change GameObject of _replaceMember and DragMember
-        DragDropContainer.GetComponent<DragDropContainer>().ChangeObjectByOrder(_dragEndOrder, _originalOrder);
+        dragDropContainer.GetComponent<DragDropContainer>().ChangeObjectByOrder(_dragEndOrder, _originalOrder);
 
         // Change Position of _replacedMember and DragMember
-        DragDropContainer.GetComponent<DragDropContainer>().ChangeObjectPosition(DragDropObject, _replacedObject);
+        dragDropContainer.GetComponent<DragDropContainer>().ChangeObjectPosition(dragDropObject, _replacedObject);
 
         // Reset DragDrop handler's position
-        _dragDropRectTransform.anchoredPosition = DragDropOriginalPosition;
+        _dragDropRectTransform.anchoredPosition = dragDropOriginalPosition;
 
-        yield return new WaitForSeconds(DragDropContainer.GetComponent<DragDropContainer>().AutoMoveSpeed);
+        yield return new WaitForSeconds(dragDropContainer.GetComponent<DragDropContainer>().autoMoveSpeed);
 
-        DragDropContainer.GetComponent<GridLayoutGroup>().enabled = true;
+        dragDropContainer.GetComponent<GridLayoutGroup>().enabled = true;
     }
 }
