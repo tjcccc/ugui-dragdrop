@@ -178,11 +178,16 @@ public class DragDropContainer : MonoBehaviour
     /// </summary>
     /// <param name="dragObject">Drag object.</param>
     /// <param name="replacedObject">Replaced object.</param>
-    public void ChangeObjectPosition(GameObject dragObject, GameObject replacedObject)
+    /// <param name="draggingHandler">Need this handler for start moving position.</param>
+    public void ChangeObjectPosition(GameObject dragObject, GameObject replacedObject, GameObject draggingHandler = null)
     {
         var dragObjectOrder = GetObjectOrder(dragObject);
         var replacedObjectOrder = GetObjectOrder(replacedObject);
 
+        if (draggingHandler != null)
+        {
+            dragObject.transform.position = draggingHandler.transform.position;
+        }
         dragObject.transform.DOLocalMove(dragDropObjectPositions[dragObjectOrder], autoMoveSpeed);
         replacedObject.transform.DOLocalMove(dragDropObjectPositions[replacedObjectOrder], autoMoveSpeed);
 

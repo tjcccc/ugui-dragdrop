@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class DragDrop : MonoBehaviour
 {
+    // If you want it looks like only one dragging object, check it.
+    public bool isObjectInvisible;
+    
     // DragDrop Group
     [HideInInspector] public GameObject dragDropContainer;
     [HideInInspector] public GameObject dragDropObject;
@@ -126,7 +129,7 @@ public class DragDrop : MonoBehaviour
     {
         dragDropContainer.GetComponent<GridLayoutGroup>().enabled = false;
 
-        // Save current Team Member Order
+        // Save current object Order
         _originalOrder = GetObjectOrder();
 
         // Display in the top layer
@@ -154,10 +157,10 @@ public class DragDrop : MonoBehaviour
     /// </summary>
     public void OnDragEnd()
     {
-        StartCoroutine(OnDragEndIEnumerator());
+        StartCoroutine(OnDragEndCoroutine());
     }
 
-    private IEnumerator OnDragEndIEnumerator()
+    private IEnumerator OnDragEndCoroutine()
     {
         // Get Drag Object's DragEnd Order
         _dragEndOrder = GetDragEndOrder();
@@ -165,17 +168,17 @@ public class DragDrop : MonoBehaviour
         // Get Replaced Object by DragEnd Order
         _replacedObject = dragDropContainer.GetComponent<DragDropContainer>().GetObjectByOrder(_dragEndOrder);
 
-        // Change _replacedMember's order to _originalOrder
+        // Change _replacedObject's order to _originalOrder
         _replacedObject.GetComponent<DragDropObject>().ChangeObjectOrder(_originalOrder);
 
-        // Change DragMember (this Member) 's order to dragEndOrder
+        // Change DragObject (this Object) 's order to dragEndOrder
         dragDropObject.GetComponent<DragDropObject>().ChangeObjectOrder(_dragEndOrder);
 
-        // Change GameObject of _replaceMember and DragMember
+        // Change GameObject of _replaceObject and DragObject
         dragDropContainer.GetComponent<DragDropContainer>().ChangeObjectByOrder(_dragEndOrder, _originalOrder);
 
-        // Change Position of _replacedMember and DragMember
-        dragDropContainer.GetComponent<DragDropContainer>().ChangeObjectPosition(dragDropObject, _replacedObject);
+        // Change Position of _replacedObject and DragObject
+        dragDropContainer.GetComponent<DragDropContainer>().ChangeObjectPosition(dragDropObject, _replacedObject, isObjectInvisible ? gameObject : null);
 
         // Reset DragDrop handler's position
         _dragDropRectTransform.anchoredPosition = dragDropOriginalPosition;
